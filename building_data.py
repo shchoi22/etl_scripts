@@ -9,7 +9,7 @@ try:
    os.system("python ./scripts/pw_building_data_prod.py")
 
    #Data write to analytics as processed data
-   #os.system("python ./scripts/prospect_data_analytics.py")
+   os.system("python ./scripts/building_data_analytics.py")
 except:
    exc_type, exc_value, exc_traceback = sys.exc_info()
    lines = traceback.format_exception(exc_type, exc_value, exc_traceback)

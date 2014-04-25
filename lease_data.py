@@ -6,10 +6,10 @@ import MailingInfo as mf
 
 try:
    #Data pull, clean, and write to public as raw data
-   os.system("python ./scripts/pw_lease_data_prod.py")
+   os.system("python /home/schoi/etl/scripts/pw_lease_data_prod.py")
 
    #Data write to analytics as processed data
-   os.system("python ./scripts/lease_data_analytics.py")
+   os.system("python /home/schoi/etl/scripts/lease_data_analytics.py")
 except:
    exc_type, exc_value, exc_traceback = sys.exc_info()
    lines = traceback.format_exception(exc_type, exc_value, exc_traceback)

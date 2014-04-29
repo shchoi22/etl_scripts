@@ -15,9 +15,11 @@ with
 
 SELECT
    prospect_data.*
-  ,secondary.id as secondary_customer_id
+  ,cast(secondary.id as int) as secondary_customer_id
+  ,cast(secondary.prospect_id as int) as secondary_prospect_id
   ,secondary.first_name as secondary_first_name
   ,secondary.last_name as secondary_last_name
+  ,cast(secondary.applicant_id as int) as secondary_applicant_id
   ,case when pw_leases.leasename is null then pw_leases_sec.leasename else pw_leases.leasename end as lease_name
 
 /*

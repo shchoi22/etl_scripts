@@ -1,8 +1,8 @@
 ﻿--explain
 with customers_clean as 
 (select
-   trim(lower(replace(replace(customers.first_name,';',''),'/t',''))) as first_name_clean
-  ,trim(lower(replace(replace(customers.last_name,';',''),'/t',''))) as last_name_clean
+   trim(lower(replace(replace(replace(customers.first_name,'-',' '),';',''),'/t',''))) as first_name_clean
+  ,trim(lower(replace(replace(replace(customers.last_name,'-',' '),';',''),'/t',''))) as last_name_clean
   ,replace(replace(replace(replace(customers.home_phone,' ',''),'-',''),'(',''),')','') as home_phone_clean
   ,replace(replace(replace(replace(customers.mobile_phone,' ',''),'-',''),'(',''),')','') as mobile_phone_clean
   ,replace(replace(replace(replace(customers.work_phone,' ',''),'-',''),'(',''),')','') as work_phone_clean

@@ -1,7 +1,10 @@
 ﻿
 with 
  pw_leases as 
-   (select pw_lease.*
+   (select pw_lease.leasename
+     ,pw_lease.createdtime
+     ,replace(pw_lease.primarycontactfirstname,'-',' ') as primarycontactfirstname
+     ,replace(pw_lease.primarycontactlastname,'-',' ') as primarycontactlastname
      ,replace(replace(replace(replace(pw_lease.primarycontacthomephone,' ',''),'-',''),'(',''),')','') as home_phone
      ,replace(replace(replace(replace(pw_lease.primarycontactmobile,' ',''),'-',''),'(',''),')','') as mobile_phone
      ,replace(replace(replace(replace(pw_lease.primarycontactworkphone,' ',''),'-',''),'(',''),')','') as work_phone
@@ -11,7 +14,19 @@ with
                  then replace(replace(replace(replace(pw_lease.primarycontactmobile,' ',''),'-',''),'(',''),')','') else '' end) ||
       (case when length(replace(replace(replace(replace(pw_lease.primarycontactworkphone,' ',''),'-',''),'(',''),')','')) >= 10
                  then replace(replace(replace(replace(pw_lease.primarycontactworkphone,' ',''),'-',''),'(',''),')','') else '' end) as combined_phone
-    from pw_lease)
+    from pw_lease
+    join (select 
+           pw_lease.primarycontactfirstname as first_name
+          ,pw_lease.primarycontactlastname as last_name
+          ,pw_lease.primarycontactmobile || pw_lease.primarycontacthomephone || pw_lease.primarycontactworkphone as combined
+          ,min(cast(pw_lease.createdtime as timestamp)) as converted_date
+         from pw_lease
+         group by
+           first_name
+          ,last_name
+          ,combined) as move_within_pangea on pw_lease.primarycontactfirstname = move_within_pangea.first_name
+                                           and pw_lease.primarycontactlastname = move_within_pangea.last_name
+                                           and cast(pw_lease.createdtime as timestamp) = move_within_pangea.converted_date )
 
 SELECT
    prospect_data.*

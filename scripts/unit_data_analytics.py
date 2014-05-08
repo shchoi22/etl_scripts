@@ -9,7 +9,10 @@ cur = con.cursor()
 cur.execute("DROP TABLE IF EXISTS analytics.units;")
 cur.execute("CREATE TABLE analytics.units AS " + query + ";")
 cur.execute("GRANT ALL ON TABLE analytics.units TO GROUP reporting_role;")
+cur.execute("create index on analytics.units ((units.unit));")
+cur.execute("create index on analytics.units ((units.building));")
 con.commit()
+
 
 cur.close()
 con.close()

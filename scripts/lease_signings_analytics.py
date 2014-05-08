@@ -9,6 +9,7 @@ cur = con.cursor()
 cur.execute("DROP TABLE IF EXISTS analytics.lease_signings;")
 cur.execute("CREATE TABLE analytics.lease_signings AS " + query + ";")
 cur.execute("GRANT ALL ON TABLE analytics.lease_signings TO GROUP reporting_role;")
+cur.execute("create index on analytics.lease_signings ((lease_signings.prospect_id));")
 con.commit()
 
 cur.close()

@@ -29,12 +29,49 @@ with
                                            and cast(pw_lease.createdtime as timestamp) = move_within_pangea.converted_date )
 
 SELECT
-   prospect_data.*
+   cast(prospect_data.id as int) as customer_id
+  --,case when prospect_data.entity_id ='' then null else cast(prospect_data.entity_id as int) end as entity_id
+  ,prospect_data.first_name
+  ,prospect_data.last_name
+  ,prospect_data.mobile_phone
+  ,prospect_data.work_phone
+  ,prospect_data.home_phone
+  ,prospect_data.combined
+  ,prospect_data.email
+  ,case when prospect_data.dob ='' then null else cast(prospect_data.dob as date) end as date_of_birth
+  ,cast(prospect_data.created as timestamp) as created_at
+  ,case when prospect_data.prospect_id ='' then null else cast(cast(prospect_data.prospect_id as numeric) as int) end as prospect_id
+  ,case when prospect_data.prospect_desired_beds ='' then null else cast(cast(prospect_data.prospect_desired_beds as numeric) as int) end as prospect_desired_beds
+  ,case when prospect_data.prospect_desired_baths ='' then null else cast(cast(prospect_data.prospect_desired_baths as numeric) as int) end as prospect_desired_baths
+  ,prospect_data.prospect_desired_location
+  ,case when prospect_data.prospect_number_of_occupants ='' then null else cast(cast(prospect_data.prospect_number_of_occupants as numeric) as int) end as prospect_number_of_occupants
+  ,prospect_data.prospect_number_of_pets
+  ,case when prospect_data.prospect_move_in_date ='' then null else cast(prospect_data.prospect_move_in_date as date) end as prospect_move_in_date
+  ,prospect_data.prospect_income_source
+  ,prospect_data.prospect_evictions_within_twelve_months
+  ,prospect_data.prospect_felonies_within_three_years
+  ,case when prospect_data.prospect_monthly_income ='' then null else cast(prospect_data.prospect_monthly_income as numeric) end as prospect_monthly_income
+  ,prospect_data.prospect_reason_not_converting
+  ,prospect_data.prospect_subsidy_voucher
+  ,prospect_data.prospect_building_name
+  ,prospect_data.prospect_unit_name
+  ,case when prospect_data.prospect_waitlisted_at ='' then null else cast(prospect_data.prospect_waitlisted_at as timestamp) end prospect_waitlisted_at
+  ,prospect_data.prospect_desired_history
+  ,prospect_data.desired_building_name
+  ,prospect_data.desired_unit_name
+  ,prospect_data.master_lead_provider
+  ,prospect_data.sub_lead_provider
+  ,prospect_data.desktop_or_mobile
+  ,prospect_data.subsidy_type
+  ,prospect_data.voucher_amount
+  ,case when prospect_data.updated_at = '' then null else cast(prospect_data.updated_at as timestamp) end as updated_at
+  ,case when prospect_data.applicant_id ='' then null else cast(cast(prospect_data.applicant_id as numeric) as int) end as applicant_id
+  ,case when prospect_data.application_id ='' then null else cast(cast(prospect_data.application_id as numeric) as int) end as application_id
   ,cast(cast(secondary.id as numeric) as int) as secondary_customer_id
-  ,cast(cast(secondary.prospect_id as numeric) as int) as secondary_prospect_id
+  ,secondary.prospect_id as secondary_prospect_id
   ,secondary.first_name as secondary_first_name
   ,secondary.last_name as secondary_last_name
-  ,cast(cast(secondary.applicant_id as numeric) as int) as secondary_applicant_id
+  ,secondary.applicant_id as secondary_applicant_id
   ,case when pw_leases.leasename is null then pw_leases_sec.leasename else pw_leases.leasename end as lease_name
 
 /*

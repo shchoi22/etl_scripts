@@ -73,6 +73,9 @@ SELECT
   ,secondary.last_name as secondary_last_name
   ,secondary.applicant_id as secondary_applicant_id
   ,case when pw_leases.leasename is null then pw_leases_sec.leasename else pw_leases.leasename end as lease_name
+  ,case when prospect_data.first_showing_created ='' then null else cast(prospect_data.first_showing_created as timestamp) end as first_showing_created
+  ,case when prospect_data.application_submitted_on = '' then null else cast(prospect_data.application_submitted_on as timestamp) end as application_submitted_on
+  ,case when prospect_data.application_processed_on = '' then null else cast(prospect_data.application_processed_on as timestamp) end application_processed_on
 
 /*
   ,pw_building.portfolioabbreviation ||' | '||pw_building.buildingabbreviation||' | '||prospect_data.desired_unit_name as desired_location

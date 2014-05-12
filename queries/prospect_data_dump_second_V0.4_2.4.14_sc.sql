@@ -76,7 +76,32 @@ SELECT
   ,case when prospect_data.first_showing_created ='' then null else cast(prospect_data.first_showing_created as timestamp) end as first_showing_created
   ,case when prospect_data.application_submitted_on = '' then null else cast(prospect_data.application_submitted_on as timestamp) end as application_submitted_on
   ,case when prospect_data.application_processed_on = '' then null else cast(prospect_data.application_processed_on as timestamp) end application_processed_on
-
+  ,case when prospect_data.total_showing_count ='' then 0 else cast(cast(prospect_data.total_showing_count as numeric) as int) end as total_showing_count
+  ,case when prospect_data.missed_showing_count ='' then 0 else cast(cast(prospect_data.missed_showing_count as numeric) as int) end as missed_showing_count
+  ,case when prospect_data.cancelled_showing_count ='' then 0 else cast(cast(prospect_data.cancelled_showing_count as numeric) as int) end as cancelled_showing_count
+  ,case when prospect_data.rescheduled_showing_count ='' then 0 else cast(cast(prospect_data.rescheduled_showing_count as numeric) as int) end as rescheduled_showing_count
+  ,case when prospect_data.shown_showing_count ='' then 0 else cast(cast(prospect_data.shown_showing_count as numeric) as int) end as shown_showing_count
+  ,case when prospect_data.pending_showing_count ='' then 0 else cast(cast(prospect_data.pending_showing_count as numeric) as int) end as pending_showing_count
+  ,case when prospect_data.showings_before_app ='' then 0 else cast(cast(prospect_data.showings_before_app as numeric) as int) end as showings_before_app
+  ,case when prospect_data.showings_after_app = '' then 0 else cast(cast(prospect_data.showings_after_app as numeric) as int) end as showings_after_app
+  ,case when prospect_data.avg_days_out_scheduled = '' then null else cast(prospect_data.avg_days_out_scheduled as interval) end as avg_days_out_scheduled
+  ,case when prospect_data.units_visited_count='' then 0 else cast(cast(prospect_data.units_visited_count as numeric) as int) end as units_visited_count
+  ,case when prospect_data.units_visited_list = '' then null else prospect_data.units_visited_list end as units_visited_list
+  ,case when prospect_data.showing_set_by_count = '' then 0 else cast(cast(prospect_data.showing_set_by_count as numeric) as int) end as showing_set_by_count
+  ,case when prospect_data.showing_set_by_list ='' then null else prospect_data.showing_set_by_list end as showing_set_by_list
+  ,case when prospect_data.last_showing_created = '' then null else cast(prospect_data.last_showing_created as timestamp) end as last_showing_created
+  ,case when prospect_data.leasing_agents_shown_list = '' then null else prospect_data.leasing_agents_shown_list end as leasing_agents_shown_list
+  ,case when prospect_data.lease_signing_count = '' then 0 else cast(cast(prospect_data.lease_signing_count as numeric) as int) end as lease_signing_count
+  ,case when prospect_data.ls_buildings_visited ='' then null else prospect_data.ls_buildings_visited end as ls_buildings_visited
+  ,case when prospect_data.ls_units_visited = '' then null else prospect_data.ls_units_visited end as ls_units_visited
+  ,case when prospect_data.first_signing_set = '' then null else cast(prospect_data.first_signing_set as timestamp) end as first_signing_set
+  ,prospect_data.primary_or_secondary_applicant
+  ,prospect_data.approval_type
+  ,prospect_data.decision
+  ,prospect_data.score
+  ,prospect_data.tier
+ -- ,prospect_data.ssn_itin
+ -- ,prospect_data.months_at_residence
 /*
   ,pw_building.portfolioabbreviation ||' | '||pw_building.buildingabbreviation||' | '||prospect_data.desired_unit_name as desired_location
   ,prospect_data.master_lead_provider
@@ -179,23 +204,7 @@ SELECT
                                               'CTSIGN','INDYFLYER','BALTFLYER','HOSTR','SSFEST','STSHIRT','INGLAWN','STREET','S8FLY','STHO') then 'Signage'                                    
       when prospect_data.sub_lead_provider in('STIMES','STLA','STOWN','SUN250','SUNC','SUNT','SUNT','SUNTSS') then 'SunTimes'
       when prospect_data.sub_lead_provider in('END','MID','REMSSF','RTXEM','RTXEM','SHOWTXT') then 'Text-Port'
-      when prospect_data.sub_lead_provider in('AM26','BGC','BSOUTH','BSUB','CLTV','CWPP','CWPRE','EVE26','FOX','NEWS','SUNCW','TVPAN',
-                                              'WCIU','WGN') then 'TV'         
-      when lower(prospect_data.sub_lead_provider) in('walk') then 'Walk'
-      when prospect_data.master_lead_provider ='' then 'none'
-      else prospect_data.master_lead_provider end as master_lead_clean
-  ,prospect_data.subsidy_type as public_assistance
-  ,pw_leases.publicassistanceprogram as pap_clean
-  ,case when prospect_data.subsidy_type !='' or pw_leases.publicassistanceprogram !='None' then 'yes' else 'no' end as subsidy_lead
-  ,'' as conv_turnaround
-  ,'no' as student
-  ,case when prospect_data.sub_lead_provider in('ACON','AHLS','APA','BHR','CAF','CHIA','CITYWIDE','DREAM','DRT','DWELL','ELAN','GOTV','HANSEN',
-                                               'HPR','HURA','INFINITE','JABS','JADE','JCON','KALE','KARBON','KELLER','KELLY','LOOP','LPRO',
-                                               'MREALTY','MYAPT','NATI','NGATE','OLAD','PROEQ','R2R','REFUGE','REMAX','RENEW','RKP','ROCK',
-                                               'ROYAL','RPM','RPREALTY','RUFF','SPU','THRESHOLDS','TNR','TPH','UASP','URENT','YVET','CASS',
-                                               'WUBB') then 'yes' else 'no' end as agency
-  --count(case when prospect_data.application_submitted_on !='' then 1 else null end) as applications 
-  --count(case when pw_leases.leasename is not null or pw_leases_sec.leasename is not null then 1 else null end) as converted
+      when prospect_data.sub_lead_provider in('AM26','BGC','
 */
 FROM 
  --(select * from pcore_prospect_data where pcore_prospect_data.primary_or_secondary_applicant <> 'Secondary') as prospect_data

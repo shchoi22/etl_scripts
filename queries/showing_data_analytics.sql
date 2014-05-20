@@ -15,5 +15,5 @@
   ,received_app_within_8_hrs
   ,last_showing
   ,last_showing_to_convert
-  
+  ,cast(showing_set_on as timestamp) as showing_set_on
 from pcore_showing_data

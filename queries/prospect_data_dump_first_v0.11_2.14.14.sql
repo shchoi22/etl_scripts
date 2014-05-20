@@ -1,5 +1,5 @@
 ﻿--explain
-with customers_clean as 
+with customers_clean as
 (select
    trim(lower(replace(replace(replace(customers.first_name,'-',' '),';',''),'/t',''))) as first_name_clean
   ,trim(lower(replace(replace(replace(customers.last_name,'-',' '),';',''),'/t',''))) as last_name_clean
@@ -30,14 +30,14 @@ with customers_clean as
                  from customers_promos
                  left outer join promos as desktop_mobile on desktop_mobile.id = customers_promos.promo_id
                                    and desktop_mobile.promo_type = 'lead_source'
-                 where desktop_mobile.id is not null) as desktop_mobile on desktop_mobile.customer_id = customers.id                 
+                 where desktop_mobile.id is not null) as desktop_mobile on desktop_mobile.customer_id = customers.id
  left outer join promos as sub_lead_details on sub_lead_details.id = sub_lead.promo_id
       where
       customers.first_name is not null
       and customers.first_name !=''
       and customers.last_name is not null
       and customers.last_name !=''
-      and customers.created_at > '2013-01-01' 
+      and customers.created_at > '2013-01-01'
       and customers.id not in(select dups.id
                         from (select customers.id, row_number() over(partition by first_name_clean, last_name_clean, combined order by customers.created_at asc) as row
                               ,last_application.applicant_id as applicant_id
@@ -74,7 +74,7 @@ select
  ,customers_clean.dob
  ,customers_clean.email
  ,customers_clean.created_at as created
- 
+
  -- Prospect Data --
  ,prospects.id as prospect_id
  ,prospects.desired_beds as prospect_desired_beds
@@ -108,7 +108,7 @@ select
  ,prospects.subsidy_type
  ,prospects.subsidy_voucher as voucher_amount
  ,prospects.updated_at
- 
+
  --Showing Data --
  ,showing_counts.total_showing as total_showing_count
  ,showing_counts.showing_missed as missed_showing_count
@@ -116,7 +116,7 @@ select
  ,showing_counts.showing_rescheduled as rescheduled_showing_count
  ,showing_counts.showing_shown as shown_showing_count
  ,showing_counts.showing_pending as pending_showing_count
- ,showing_counts.showings_before_app 
+ ,showing_counts.showings_before_app
  ,showing_counts.showings_after_app
  ,showing_counts.avg_days_out_scheduled
  ,showing_counts.units_visited_count
@@ -126,7 +126,7 @@ select
  ,showing_counts.first_showing_created
  ,showing_counts.last_showing_created
  ,showing_counts.leasing_agents_shown_list
- 
+
  --Lease Signing Data --
  ,lease_signings_count.total_lease_signings as lease_signing_count
  ,lease_signings_count.ls_buildings_visited
@@ -227,7 +227,7 @@ left outer join buildings on units.building_id = buildings.id
 
 --Showings Data -----------------------------------------------------------------------------------------------------------------------------------------
 
-left outer join (select 
+left outer join (select
                   --showings.prospect_id
                   customers_clean.first_name_clean
                   ,customers_clean.last_name_clean
@@ -252,22 +252,22 @@ left outer join (select
                  ,min(showings.id) as first_showing_id
                  ,max(showings.created_at) as last_showing_created
                  ,string_agg(case when showings.showable_state = 'showing_set' then showings.name else null end,',') as leasing_agents_shown_list
-                 
-                 from showings  
+
+                 from showings
                  left outer join prospects on showings.prospect_id = prospects.id
                  left outer join customers_clean on prospects.customer_id = customers_clean.id
                  left outer join applicants on prospects.id = applicants.prospect_id
                  left outer join units on showings.unit_id = units.id
                  left outer join activities on showings.id = activities.record_id
-		               and activities.record_type = 'showing' 
+		               and activities.record_type = 'showing'
                                and activities.action = 'created_showing'
-                 group by 
+                 group by
                    customers_clean.first_name_clean
                   ,customers_clean.last_name_clean
                   ,customers_clean.mobile_phone
                   ,customers_clean.work_phone
                   ,customers_clean.home_phone
-                  ,customers_clean.combined) as showing_counts on 
+                  ,customers_clean.combined) as showing_counts on
                   --prospects.id = showing_counts.prospect_id
                  (((length(customers_clean.combined) >= length(showing_counts.combined)
                      and ((length(showing_counts.mobile_phone) >=10 and customers_clean.combined like '%'||showing_counts.mobile_phone||'%')
@@ -279,7 +279,7 @@ left outer join (select
                      or (length(customers_clean.work_phone) >=10 and showing_counts.combined like '%'||customers_clean.work_phone||'%')))))
                 and customers_clean.first_name_clean = showing_counts.first_name_clean
 		 and customers_clean.last_name_clean = showing_counts.last_name_clean)
-              
+
 --Application/Applicant Data ----------------------------------------------------------------------------------------------------------------------------
 
 left outer join (select applicant_id -- last application that was processed
@@ -300,15 +300,15 @@ left outer join (select application_id -- to identify applicant as primary or se
 		 from applications_occupants
 		 group by customer_id) as occupant_application on occupant_application.customer_id = customers_clean.id
 --CLV Reports --------------------------------------------------------------------------------------------------------------------------------------------
-left outer join (select max(clv_sub.subscriber_id) as subscriber_id ,max(clv_sub.third_party_id) as third_party_id 
-                  from subscriptions as clv_sub 
+left outer join (select max(clv_sub.subscriber_id) as subscriber_id ,max(clv_sub.third_party_id) as third_party_id
+                  from subscriptions as clv_sub
                   where clv_sub.third_party_type = 'ThirdParty::CLVReport'
                   and clv_sub.subscriber_type = 'Applicant'
                   group by clv_sub.subscriber_id) as clv_sub on clv_sub.subscriber_id = applicants.id
 left outer join clv_reports on clv_reports.id = clv_sub.third_party_id
 
 --EVC Reports---------------------------------------------------------------------------------------------------------------------------------------------
-left outer join (select *  
+left outer join (select *
 		  from
 		 (select max(lexis_nexis_reports.id) as id
 		,max(subscriptions.subscriber_id) as subscriber_id
@@ -316,7 +316,7 @@ left outer join (select *
 		,max(lexis_nexis_reports.updated_at) as updated_at
 
 		from public.lexis_nexis_reports
-		left outer join subscriptions on subscriptions.third_party_id = lexis_nexis_reports.id 
+		left outer join subscriptions on subscriptions.third_party_id = lexis_nexis_reports.id
 			and subscriptions.third_party_type = 'ThirdParty::LexisNexisReport'
 			and subscriptions.subscriber_type = 'Applicant'
 		where
@@ -328,20 +328,20 @@ left outer join (select *
 		left outer join (select lexis_nexis_items.lexis_nexis_report_id
 		 ,count(*) as ev_count_total
                  ,count(case when (cast(lexis_nexis_items.created_at as date) - cast(lexis_nexis_items.date as date))/365.0 <= 1.0 then 1 else null end) as ev_count_0_1
-                 ,count(case when (cast(lexis_nexis_items.created_at as date) - cast(lexis_nexis_items.date as date))/365.0 <= 3.0 
+                 ,count(case when (cast(lexis_nexis_items.created_at as date) - cast(lexis_nexis_items.date as date))/365.0 <= 3.0
                             and (cast(lexis_nexis_items.created_at as date) - cast(lexis_nexis_items.date as date))/365.0 > 1.0 then 1 else null end) as ev_count_1_3
-                 ,count(case when (cast(lexis_nexis_items.created_at as date) - cast(lexis_nexis_items.date as date))/365.0 <= 5.0 
-                            and (cast(lexis_nexis_items.created_at as date) - cast(lexis_nexis_items.date as date))/365.0 > 3 then 1 else null end) as ev_count_3_5          
+                 ,count(case when (cast(lexis_nexis_items.created_at as date) - cast(lexis_nexis_items.date as date))/365.0 <= 5.0
+                            and (cast(lexis_nexis_items.created_at as date) - cast(lexis_nexis_items.date as date))/365.0 > 3 then 1 else null end) as ev_count_3_5
                  ,count(case when (cast(lexis_nexis_items.created_at as date) - cast(lexis_nexis_items.date as date))/365.0 <= 10.0
                             and (cast(lexis_nexis_items.created_at as date) - cast(lexis_nexis_items.date as date))/365.0 > 5.0 then 1 else null end) as ev_count_5_10
                  ,count(case when (cast(lexis_nexis_items.created_at as date) - cast(lexis_nexis_items.date as date))/365.0 > 10 then 1 else null end) as ev_count_10_plus
 
-                 from lexis_nexis_items 
-                 where lexis_nexis_items.item_type = 'eviction' 
+                 from lexis_nexis_items
+                 where lexis_nexis_items.item_type = 'eviction'
                  group by lexis_nexis_report_id) as ev_items on ln_reports.id = ev_items.lexis_nexis_report_id) as ln_ev on ln_ev.subscriber_id= applicants.id
 
  --Criminal --------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  left outer join (select *  
+  left outer join (select *
 		  from
 		 (select max(lexis_nexis_reports.id) as id
 		,max(subscriptions.subscriber_id) as subscriber_id
@@ -349,7 +349,7 @@ left outer join (select *
 		,max(lexis_nexis_reports.updated_at) as updated_at
 
 		from public.lexis_nexis_reports
-		left outer join subscriptions on subscriptions.third_party_id = lexis_nexis_reports.id 
+		left outer join subscriptions on subscriptions.third_party_id = lexis_nexis_reports.id
 			and subscriptions.third_party_type = 'ThirdParty::LexisNexisReport'
 			and subscriptions.subscriber_type = 'Applicant'
 		where
@@ -361,30 +361,30 @@ left outer join (select *
 		left outer join (select lexis_nexis_items.lexis_nexis_report_id
 		 ,count(*) as fel_count_total
                  ,count(case when (cast(lexis_nexis_items.created_at as date) - cast(lexis_nexis_items.date as date))/365.0 <= 3.0 then 1 else null end) as fel_count_0_3
-                 ,count(case when (cast(lexis_nexis_items.created_at as date) - cast(lexis_nexis_items.date as date))/365.0 > 3.0 
+                 ,count(case when (cast(lexis_nexis_items.created_at as date) - cast(lexis_nexis_items.date as date))/365.0 > 3.0
                             and (cast(lexis_nexis_items.created_at as date) - cast(lexis_nexis_items.date as date))/365.0 <= 5.0 then 1 else null end) as fel_count_3_5
-                 ,count(case when (cast(lexis_nexis_items.created_at as date) - cast(lexis_nexis_items.date as date))/365.0 > 5.0 
-                            and (cast(lexis_nexis_items.created_at as date) - cast(lexis_nexis_items.date as date))/365.0 <= 10 then 1 else null end) as fel_count_5_10          
+                 ,count(case when (cast(lexis_nexis_items.created_at as date) - cast(lexis_nexis_items.date as date))/365.0 > 5.0
+                            and (cast(lexis_nexis_items.created_at as date) - cast(lexis_nexis_items.date as date))/365.0 <= 10 then 1 else null end) as fel_count_5_10
                  ,count(case when (cast(lexis_nexis_items.created_at as date) - cast(lexis_nexis_items.date as date))/365.0 > 10 then 1 else null end) as fel_count_10_plus
 
-                 from lexis_nexis_items 
-                 where lexis_nexis_items.item_type = 'felony' 
+                 from lexis_nexis_items
+                 where lexis_nexis_items.item_type = 'felony'
                  group by lexis_nexis_report_id) as fel_items on ln_reports.id = fel_items.lexis_nexis_report_id
 
                 left outer join (select lexis_nexis_items.lexis_nexis_report_id
                  ,count(*) as misd_count_total
-                 ,count(case when (cast(lexis_nexis_items.created_at as date) - cast(lexis_nexis_items.date as date))/365.0 <= 2.0 then 1 else null end) as misd_count_0_2      
+                 ,count(case when (cast(lexis_nexis_items.created_at as date) - cast(lexis_nexis_items.date as date))/365.0 <= 2.0 then 1 else null end) as misd_count_0_2
                  ,count(case when (cast(lexis_nexis_items.created_at as date) - cast(lexis_nexis_items.date as date))/365.0 > 2.0 then 1 else null end) as misd_count_2_plus
 
-                 from lexis_nexis_items 
-                 where lexis_nexis_items.item_type = 'misdemeanor' 
+                 from lexis_nexis_items
+                 where lexis_nexis_items.item_type = 'misdemeanor'
                  group by lexis_nexis_report_id) as misd_items on ln_reports.id = misd_items.lexis_nexis_report_id
 
                  left outer join (select lexis_nexis_items.lexis_nexis_report_id
                  ,count(*) as so_count
 
-                 from lexis_nexis_items 
-                 where lexis_nexis_items.item_type = 'sex offense' 
+                 from lexis_nexis_items
+                 where lexis_nexis_items.item_type = 'sex offense'
                  group by lexis_nexis_report_id) as so_items on ln_reports.id = so_items.lexis_nexis_report_id) as ln_cm on ln_cm.subscriber_id= applicants.id
 
 --Approval Data -----------------------------------------------------------------------------------------------------------------------------------------
@@ -393,9 +393,9 @@ left outer join (select max(approvals.id) as approval_id -- last approval
                  ,application_id
                  ,sum(case when lower(approvals.decision) like '%error%' then 1 else 0 end) as error_count
                  ,sum(case when lower(approvals.decision) like '%pending manager%' then 1 else 0 end) as pending_count
-                 ,sum(case when lower(approvals.process_state) = 'underwritten' then 1 else 0 end) as run_count
+                 ,sum(case when lower(approvals.process_state) like '%underwritten%' then 1 else 0 end) as run_count
                  from approvals
-                 --where 
+                 --where
                  --approvals.replaced_by is null
                  --and approvals.process_state = 'underwritten'
                  group by application_id) as last_approval on last_application.application_id = last_approval.application_id
@@ -406,7 +406,7 @@ left outer join (select min(approvals.id) as approval_id -- first approval of fi
                  ,application_id
                  from approvals
                  where
-                 approvals.process_state = 'underwritten'
+                 approvals.process_state like '%underwritten%'
                  group by application_id) as first_approval on last_application.first_application_id = first_approval.application_id
 left outer join approvals as first_approval_details on first_approval.approval_id = first_approval_details.id
 
@@ -422,7 +422,7 @@ left outer join (select prospect_id
                  ,min(lease_signings.created_at) as first_signing_set
                  ,string_agg(distinct cast(buildings.name as varchar),',') as ls_buildings_visited
                  ,string_agg(distinct cast(units.name as varchar),',') as ls_units_visited
-                 
+
                   from lease_signings
                   left outer join units on lease_signings.unit_id = units.id
                   left outer join buildings on buildings.id = units.building_id
@@ -438,7 +438,7 @@ left outer join (select *
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 where
   occupant_application.customer_id is null
-  --and application_details.id is not null 
+  --and application_details.id is not null
   --and substr(cached_rendered_hash,(strpos(application_details.cached_rendered_hash,'"evictions_0_to_1_years":') + length('"evictions_0_to_1_years":')),1) ='"'
 
   --and customers_clean.sub_lead_provider is null

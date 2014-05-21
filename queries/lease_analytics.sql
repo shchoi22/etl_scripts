@@ -13,5 +13,5 @@
   ,moveindate as move_in_date
   ,vacateddate as vacated_date
   ,scheduledmoveoutdate as scheduled_moveout_date
-
+  ,unit
 from pw_lease

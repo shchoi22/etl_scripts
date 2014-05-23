@@ -12,7 +12,8 @@ import re
 def jsonToFrame (url):  #json data to dataframe
     request = urllib2.urlopen(url)
     data = request.read()
-    data = data.replace("\\'","\'").replace(">","\>")
+    data = data.replace("\\'","\'")
+    #.replace(">","\>")
     frame = json.loads(data)
     
     columns = {}

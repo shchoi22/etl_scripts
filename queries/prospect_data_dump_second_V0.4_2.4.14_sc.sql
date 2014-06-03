@@ -58,7 +58,6 @@ SELECT
   ,prospect_data.prospect_desired_history
   ,prospect_data.desired_building_name
   ,prospect_data.desired_unit_name
-  ,prospect_data.master_lead_provider
   ,case when prospect_data.sub_lead_provider = '' then null else prospect_data.sub_lead_provider end as sub_lead_provider
   ,case when prospect_data.sub_lead_provider in('ADWLP','BDSADW','CPSADW','GA250','GA350','GA450','GAAS8','GAGEN','GAUBN','GAUBN8','GCHAT',
                                                 'GCHAT8','GCHI','GCHI8','GCHIB','GCHIC','GCHILP','GCREDIT','GIND','GIND8','GINDB','GINDC',

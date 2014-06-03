@@ -175,6 +175,8 @@ select
  ,applicants.quarterly_aid_provided
  ,applicants.quarterly_aid_for_rent
  ,applicants.years_remaining_on_aid
+ ,applicants.fee_collection_type
+ ,applicants.verified_by
  ,case when lower(applicants.applicant_type) = '' or lower(applicants.applicant_type) like '%paper%' then 'General'
        when lower(applicants.applicant_type) like '%voice%' then 'VA'
        when lower(applicants.applicant_type) like '%kiosk%' then 'Kiosk'

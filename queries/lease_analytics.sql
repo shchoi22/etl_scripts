@@ -16,7 +16,7 @@ select
    ,pw_lease.building
    ,pw_lease.monthlyrent as monthly_rent
    ,pw_lease.rentdueday as rent_due_day
-   ,pw_lease.publicassistanceprogram as public_assistance_program
+   ,pw_lease.publicassistanceprogram as subsidy_type
    ,pw_lease.s8stage as s8_stage
    ,pw_lease.first_name
    ,pw_lease.last_name
@@ -60,7 +60,7 @@ select
    ,pw_lease.balance
    ,pw_lease.moveindate as move_in_date
    ,pw_lease.vacateddate as vacated_date
-   ,pw_lease.scheduledmoveoutdate as scheduled_move_out_date
+   ,pw_lease.scheduledmoveoutdate as scheduled_moveout_date
    ,pw_lease.reasonforleaving as reason_for_leaving
   ,internal_move.first_converted
   ,case when pw_lease.moveindate <= greatest(buildings.asset_acquisition_date,buildings.management_takeover_date) then 'Inherited' else 'Organic' end as tenant_acquisition_type

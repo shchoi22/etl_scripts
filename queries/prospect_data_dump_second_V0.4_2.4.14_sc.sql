@@ -227,7 +227,7 @@ FROM
 where
  prospect_data.first_name != ''
  and prospect_data.last_name !=''
- and prospect_data.created >= '2013-10-01'
+ --and prospect_data.created >= '2013-10-01'
 
 order by
  prospect_data.first_name

@@ -13,6 +13,7 @@
   ,availabledate as available_date
   ,cast(bedrooms as int) as bedrooms
   ,cast(bathrooms as int) as bathrooms
+  ,leasename as lease_name
   ,case when unitamenities not like '%Not Available%'
        and unitabbreviation not like '%Neighborhood%'
        and status !='Occupied'

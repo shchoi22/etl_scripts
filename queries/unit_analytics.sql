@@ -8,6 +8,7 @@
   ,unitamenities as unit_amenities
   ,status
   ,type as unit_type
+  ,unitsubtype as unit_subtype
   ,estimatedavailabledate as est_available_date
   ,availabledate as available_date
   ,cast(bedrooms as int) as bedrooms

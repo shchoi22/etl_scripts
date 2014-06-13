@@ -12,5 +12,6 @@
   ,cast(vacantunitcount as int) as vacant_unit_count
   ,assetacquisitiondate as asset_acquisition_date
   ,managementtakeoverdate as management_takeover_date
+  ,occupancypercentage as occupancy_percentage
 from pw_building
 

@@ -1,5 +1,5 @@
 ﻿--explain
-with customers as 
+with customers as
 (select
    trim(lower(replace(replace(customers.first_name,';',''),'/t',''))) as first_name_clean
   ,trim(lower(replace(replace(customers.last_name,';',''),'/t',''))) as last_name_clean
@@ -9,7 +9,7 @@ with customers as
   ,(case when mobile_phone is null then '' else mobile_phone end)||(case when work_phone is null then '' else work_phone end)||(case when home_phone is null then '' else home_phone end) as combined
   ,customers.*
  from customers
- where 
+ where
   lower(customers.first_name) not like 'urist%'
   and lower(customers.first_name) not like '%test%'
   and lower(customers.last_name) not like '%test%'
@@ -35,10 +35,10 @@ from
   left outer join prospects on showings.prospect_id = prospects.id
   left outer join customers on customers.id = prospects.customer_id
   left outer join applicants on applicants.customer_id = customers.id
-  
+
 --Application/Applicant Data ----------------------------------------------------------------------------------------------------------------------------
 
-left outer join (select 
+left outer join (select
                   customers.first_name_clean
                  ,customers.last_name_clean
                  ,customers.combined
@@ -50,8 +50,8 @@ left outer join (select
                        else null end as application_id
                  ,applicants.applicant_type
                  ,applicants.id as applicant_id
-                 
-                 from applicants 
+
+                 from applicants
                  left outer join customers on applicants.customer_id = customers.id
 
                  left outer join (select applicant_id -- first application
@@ -62,10 +62,10 @@ left outer join (select
                  left outer join applications as application_details on last_application.application_id = application_details.id
 
                  left outer join applications_cosigners on applications_cosigners.applicant_id = applicants.id -- cosigner
-		 
+
                  where
                    last_application.application_id is not null
-                   or applications_cosigners.applicant_id is not null) as last_application 
+                   or applications_cosigners.applicant_id is not null) as last_application
   on (((length(customers.combined) >= length(last_application.combined)
                      and ((length(last_application.mobile_phone) >=10 and customers.combined like '%'||last_application.mobile_phone||'%')
                       or (length(last_application.home_phone) >=10 and customers.combined like '%'||last_application.home_phone||'%')
@@ -114,12 +114,12 @@ select
   ,case when showings_clean.application_id is null then 'no app'
              when applications.app_state is null then 'Paper'
              else 'kiosk' end as applicant_type
-  ,case when (showings_clean.application_id is not null and showings.created_at < applications.created_at + interval '60 days') 
-             --or (applicants.id is not null and applicants.ssn_itin is not null and showings.created_at < applicants.created_at + interval '60 days') 
+  ,case when showings_clean.application_id is not null and showings.start_time < applications.created_at and date_part('day',showings.start_time-applications.created_at) <= 60
+             --or (applicants.id is not null and applicants.ssn_itin is not null and showings.created_at < applicants.created_at + interval '60 days')
              then 'yes' else 'no' end as app_in_before_showing
-  ,case when showings_clean.application_id is not null and showings.showable_state = 'showing_set' and 
+  ,case when showings_clean.application_id is not null and showings.showable_state = 'showing_set' and
              applications.created_at > showings.start_time - interval '1 hour' and applications.created_at < showings.start_time + interval '1 hour' then 'yes' else 'no' end as received_app_at_showing
-  ,case when showings_clean.application_id is not null and showings.showable_state = 'showing_set' and 
+  ,case when showings_clean.application_id is not null and showings.showable_state = 'showing_set' and
              applications.created_at > showings.start_time + interval '1 hour' and applications.created_at < showings.start_time + interval '8 hour' then 'yes' else 'no' end as received_app_within_8_hrs
   ,case when last_showing.id is not null then 'yes' else 'no' end as last_showing
   ,case when last_showing.id is not null and showings.showable_state = 'showing_set' and lease_signings.count_of > 0 then 'yes' else 'no' end as last_showing_to_convert
@@ -132,8 +132,8 @@ left outer join units on showings.unit_id = units.id
 left outer join buildings on buildings.id = units.building_id
 left outer join applications on showings_clean.application_id = applications.id
 left outer join applicants on customers.id = applicants.customer_id
-left outer join (select max(showings.id) as id 
-                   from showings 
+left outer join (select max(showings.id) as id
+                   from showings
                    where showings.showable_state ='showing_set'
                    group by showings.prospect_id) as last_showing on last_showing.id = showings.id
 left outer join (select lease_signings.prospect_id, count(*) as count_of from lease_signings
@@ -153,4 +153,4 @@ and showings.start_time is not null
 --and applicants.ssn_itin is not null
  and occupant_application.customer_id is null
 order by
-   showing_set_on 
+   showing_set_on

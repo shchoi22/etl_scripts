@@ -171,6 +171,7 @@ SELECT
   ,prospect_data.decision
   ,prospect_data.score
   ,prospect_data.tier
+  ,prospect_data.original_fee_collection_type
 
 FROM
 

@@ -50,11 +50,11 @@ select
    ,pw_lease.s8movingpapersreciept as s8_moving_papers_reciept
    ,pw_lease.s8reasonfornotconverting as s8_reason_for_not_converting
 */
-   ,pw_lease.startdate as start_date
-   ,pw_lease.moveinitemchecklist as move_in_item_checklist
-   ,pw_lease.moveoutcompliancedate as move_out_compliance_date
-   ,pw_lease.brasigningdate as bra_signing_date
-   ,pw_lease.collectioncommunicationfudate as collection_communication_fu_date
+   ,pw_lease.startdate as start_date  
+   --,pw_lease.moveinitemchecklist as move_in_item_checklist
+   --,pw_lease.moveoutcompliancedate as move_out_compliance_date
+   --,pw_lease.brasigningdate as bra_signing_date
+   --,pw_lease.collectioncommunicationfudate as collection_communication_fu_date
    ,cast(pw_lease.leaseidnumber as int) as lease_id
    ,pw_lease.enddate as end_date
    ,pw_lease.balance

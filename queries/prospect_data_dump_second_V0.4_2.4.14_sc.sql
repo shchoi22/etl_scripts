@@ -74,7 +74,7 @@ SELECT
        when prospect_data.sub_lead_provider in('74','77','B103','B742','B774','BCHI','BCTA74','BG74','BG77','BGCHI','BSAD77','BUS','BUS13',
                                                'BUS77','CTA77','GLCTA','GLH9','GLINE3','GREEN','GREENRED','GRN4','LGRN8','LINE','RAIL','RCTA',
                                                'RDL3','RDLSPRING','RED','REDAD','REDH9','REDL4','REDWIN12','RLINE2','RLN8','STOP','TRAIN',
-                                               'HYDEPARK','REDLINE13','GREENLINE13') then 'CTA'
+                                               'HYDEPARK','REDLINE13','GREENLINE13','REDAD14') then 'CTA'
        when prospect_data.sub_lead_provider in('DIAL') then 'Dialer-Port'
        when prospect_data.sub_lead_provider in('EMAPTG','JM250','JM324','JM350','JM424','JM450','JME282','LFPRE') then 'Email-ACQ'
        when prospect_data.sub_lead_provider in('APP2100','APP4250','APPCTA3','HEAT25','MORE100','NEW25','REAC224','RLU2','RLU3','RLU3',

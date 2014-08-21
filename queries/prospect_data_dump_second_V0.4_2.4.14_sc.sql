@@ -134,7 +134,7 @@ SELECT
                                                'WUBB','AMERICAN','PSTREET','WINNIE','ATEAM','FULTON','URBAN','SIWEL') then 'yes' else 'no' end as agency
   ,prospect_data.desktop_or_mobile
   ,prospect_data.subsidy_type
-  ,prospect_data.voucher_amount
+ -- ,prospect_data.voucher_amount
   ,case when prospect_data.updated_at = '' then null else cast(prospect_data.updated_at as timestamp) end as updated_at
   ,case when prospect_data.applicant_id ='' then null else cast(cast(prospect_data.applicant_id as numeric) as int) end as applicant_id
   ,case when prospect_data.application_id ='' then null else cast(cast(prospect_data.application_id as numeric) as int) end as application_id
@@ -155,7 +155,7 @@ SELECT
   ,case when prospect_data.pending_showing_count ='' then 0 else cast(cast(prospect_data.pending_showing_count as numeric) as int) end as pending_showing_count
   ,case when prospect_data.showings_before_app ='' then 0 else cast(cast(prospect_data.showings_before_app as numeric) as int) end as showings_before_app
   ,case when prospect_data.showings_after_app = '' then 0 else cast(cast(prospect_data.showings_after_app as numeric) as int) end as showings_after_app
-  ,case when prospect_data.avg_days_out_scheduled = '' then null else cast(prospect_data.avg_days_out_scheduled as interval) end as avg_days_out_scheduled
+  --,case when prospect_data.avg_days_out_scheduled = '' then null else cast(prospect_data.avg_days_out_scheduled as interval) end as avg_days_out_scheduled
   ,case when prospect_data.units_visited_count='' then 0 else cast(cast(prospect_data.units_visited_count as numeric) as int) end as units_visited_count
   ,case when prospect_data.units_visited_list = '' then null else prospect_data.units_visited_list end as units_visited_list
   ,case when prospect_data.showing_set_by_count = '' then 0 else cast(cast(prospect_data.showing_set_by_count as numeric) as int) end as showing_set_by_count

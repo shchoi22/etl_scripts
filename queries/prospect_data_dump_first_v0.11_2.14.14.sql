@@ -195,10 +195,14 @@ select
  ,approval_details.decision
  --,trim(replace(lp_reports.status_reason,';','')) as decision_reason
  ,approval_details.score
+ ,approval_details.process_state
+ ,approval_details.underwriting_model_id
+ ,case when approval_details.process_name = 'student' then 'Yes' else 'No' end as student_app
  ,last_application.application_id
  ,case when lp_reports.tier is null then approval_details.tier else lp_reports.tier end as tier
  ,case when lp_reports.amount is null then approval_details.amount else lp_reports.amount end as max_rent
- ,case when lp_reports.move_in_fee is null then approval_details.move_in_fee end as move_in_fee
+ ,case when lp_reports.move_in_fee is null then approval_details.move_in_fee else lp_reports.move_in_fee end as move_in_fee
+ ,case when lp_reports.deposit is null then approval_details.deposit else lp_reports.deposit end as deposit
  ,case when clv_reports.clv is null then applicants.clv else clv_reports.clv end as clv_score
  ,ln_ev.ev_count_total
  ,ln_ev.ev_count_0_1

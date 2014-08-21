@@ -170,9 +170,72 @@ SELECT
   ,prospect_data.approval_type
   ,prospect_data.decision
   ,prospect_data.score
+  ,prospect_data.max_rent
+  ,prospect_data.move_in_fee
+  ,prospect_data.deposit
   ,prospect_data.tier
   ,prospect_data.original_fee_collection_type
   ,prospect_data.fee_collection_type
+  ,prospect_data.verified_by
+  ,prospect_data.error_count
+  ,prospect_data.pending_count
+  ,prospect_data.run_count
+  ,prospect_data.process_state
+  ,prospect_data.underwriting_model_id
+  ,prospect_data.student_app
+  ,prospect_data.clv_score
+  ,prospect_data.ssn_itin
+  ,prospect_data.months_at_residence
+  ,prospect_data.years_at_job
+  ,prospect_data.current_address
+  ,prospect_data.current_city
+  ,prospect_data.current_state
+  ,prospect_data.current_zip
+  ,prospect_data.employer_name
+  ,prospect_data.employer_address
+  ,prospect_data.employer_phone
+  ,prospect_data.is_temp_employee
+  ,prospect_data.monthly_income_payment_method
+  ,prospect_data.monthly_income_proof
+  ,prospect_data.second_income_payment_method
+  ,prospect_data.second_income_proof
+  ,prospect_data.has_permanent_subsidy
+  ,prospect_data.has_temporary_subsidy
+  ,prospect_data.bank_name
+  ,prospect_data.bank_type
+  ,prospect_data.credit_card_type
+  ,prospect_data.number_occupants_over_eighteen
+  ,prospect_data.first_apartment
+  ,prospect_data.spanish_speaking
+  ,prospect_data.education_level
+  ,prospect_data.employment_type
+  ,prospect_data.salutation
+  ,prospect_data.marriage_status
+  ,prospect_data.school_attending
+  ,prospect_data.school_id
+  ,prospect_data.school_year
+  ,prospect_data.enrollment_status
+  ,prospect_data.financial_aid_organization
+  ,prospect_data.quarterly_aid_provided
+  ,prospect_data.quarterly_aid_for_rent
+  ,prospect_data.years_remaining_on_aid
+  ,prospect_data.ev_count_total
+  ,prospect_data.ev_count_0_1
+  ,prospect_data.ev_count_1_3
+  ,prospect_data.ev_count_3_5
+  ,prospect_data.ev_count_5_10
+  ,prospect_data.ev_count_10_plus
+  ,prospect_data.fel_count_total
+  ,prospect_data.fel_count_0_3
+  ,prospect_data.fel_count_3_5
+  ,prospect_data.fel_count_5_10
+  ,prospect_data.fel_count_10_plus
+  ,prospect_data.misd_count_total
+  ,prospect_data.misd_count_0_2
+  ,prospect_data.misd_count_2_plus
+  ,prospect_data.so_count
+  ,prospect_data.manual_entry
+
 
 FROM
 

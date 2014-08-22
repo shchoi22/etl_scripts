@@ -29,7 +29,7 @@ try:
 
     data2 = pd.DataFrame(data,columns=column)
     #data2 = data2.T.drop_duplicates().T
-    #data2 = data2.applymap(lambda x: x.replace('\n','').replace('\r','').replace(';','').replace("\\","") if isinstance(x,(str, unicode)) else x)
+    data2 = data2.applymap(lambda x: x.replace('\n','').replace('\r','').replace(';','').replace("\\","") if isinstance(x,(str, unicode)) else x)
 
     data2.to_csv('pcore_prospect_data'+'output.csv', sep=';', na_rep='', cols=None, header=False, index=False)
    

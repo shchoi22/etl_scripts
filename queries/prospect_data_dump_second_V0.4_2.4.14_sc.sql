@@ -134,7 +134,7 @@ SELECT
                                                'WUBB','AMERICAN','PSTREET','WINNIE','ATEAM','FULTON','URBAN','SIWEL') then 'yes' else 'no' end as agency
   ,prospect_data.desktop_or_mobile
   ,prospect_data.subsidy_type
- -- ,prospect_data.voucher_amount
+  ,prospect_data.voucher_amount
   ,case when prospect_data.updated_at = '' then null else cast(prospect_data.updated_at as timestamp) end as updated_at
   ,case when prospect_data.applicant_id ='' then null else cast(cast(prospect_data.applicant_id as numeric) as int) end as applicant_id
   ,case when prospect_data.application_id ='' then null else cast(cast(prospect_data.application_id as numeric) as int) end as application_id

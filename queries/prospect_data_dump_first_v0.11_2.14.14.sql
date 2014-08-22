@@ -196,7 +196,6 @@ select
  --,trim(replace(lp_reports.status_reason,';','')) as decision_reason
  ,approval_details.score
  ,approval_details.process_state
- ,approval_details.underwriting_model_id
  ,case when approval_details.process_name = 'student' then 'Yes' else 'No' end as student_app
  ,last_application.application_id
  ,case when lp_reports.tier is null then approval_details.tier else lp_reports.tier end as tier

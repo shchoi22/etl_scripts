@@ -106,7 +106,7 @@ select
        when date_part('month', cast(date_trunc('month',customers_clean.created_at)+interval'1 month - 1 day' as date)) between 7 and 9 then 3
        else 4 end as prospect_created_quarter
  ,prospects.subsidy_type
- --,prospects.subsidy_voucher as voucher_amount
+ ,prospects.subsidy_voucher as voucher_amount
  ,prospects.updated_at
 
  --Showing Data --

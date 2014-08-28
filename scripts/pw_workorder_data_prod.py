@@ -20,7 +20,7 @@ try:
 
     #Cleaning Data
     data = dc.cleanData(data)
-
+    data = data.applymap(lambda x: x.replace('\n','').replace('\r','').replace(';','').replace("\\","") if isinstance(x,(str, unicode)) else x)
     conn = psycopg2.connect("host={0} dbname={1} user={2} password ={3} sslmode=allow".format(cf.chartio_host,cf.chartio_db,cf.chartio_id,cf.chartio_pwd))
 
     dc.writeFrame(conn,'pw_workorder',data)

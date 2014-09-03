@@ -1,26 +1,41 @@
 import pandas as pd
-import numpy as np
 import psycopg2
-from pandas import DataFrame
 from datetime import datetime, date
 import collections
 import re
 import dataclean as dc
 import sys
 import traceback
-import smtplib
 import ConfigInfo as cf
+import urllib2
+import json
+import smtplib
 
 try:
     #buildings Data
     url = cf.wo_url
 
     start = datetime.now()
-    data = dc.jsonToFrame(url)
+    #data = dc.jsonToFrame(url)
+    request = urllib2.urlopen(url)
+    frame = json.loads(request.read())
+    
+    columns = {}
+    pattern = re.compile('[\W_]+')
 
+    for items in frame['columns']:
+        columns[items['index']]=items['label']
+    for column in columns:
+        columns[column] = pattern.sub('', columns[column])
+        if columns[column][0].isdigit():
+            columns[column] = '_' + columns[column]
+
+    data = pd.DataFrame(frame['records'], index=None).rename(columns=columns)
+    
     #Cleaning Data
-    data = dc.cleanData(data)
     data = data.applymap(lambda x: x.replace('\n','').replace('\r','').replace(';','').replace("\\","") if isinstance(x,(str, unicode)) else x)
+    data = dc.cleanData(data)
+    
     conn = psycopg2.connect("host={0} dbname={1} user={2} password ={3} sslmode=allow".format(cf.chartio_host,cf.chartio_db,cf.chartio_id,cf.chartio_pwd))
 
     dc.writeFrame(conn,'pw_workorder',data)

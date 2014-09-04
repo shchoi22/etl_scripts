@@ -69,7 +69,7 @@ SELECT
        when prospect_data.sub_lead_provider in('AGB','FRB') then 'AptBooks'
        when prospect_data.sub_lead_provider in('BING','BINGC8','PFBING','BZONE1','BZONE2','BZONE3','BINGBRAND','BINGBRAND') then 'BING'
        when prospect_data.sub_lead_provider in('CRAI','CRAIAG','CRAIE','CBT','CRAIN','CIT','CMY','CAG','CAS','CMYTST','CAGTST','CS8','CTW',
-                                               'CAT','CMT','CLB','CPW','CGR','CRL','CVL','CCL','CHL','CML','CVY','CFL','CCE','CTT','CF2','CAH','CA2','CHW') then 'Craigslist'
+                                               'CAT','CMT','CLB','CPW','CGR','CRL','CVL','CCL','CHL','CML','CVY','CFL','CCE','CTT','CF2','CAH','CA2','CHW','JBC','CJB') then 'Craigslist'
 
        when prospect_data.sub_lead_provider in('74','77','B103','B742','B774','BCHI','BCTA74','BG74','BG77','BGCHI','BSAD77','BUS','BUS13',
                                                'BUS77','CTA77','GLCTA','GLH9','GLINE3','GREEN','GREENRED','GRN4','LGRN8','LINE','RAIL','RCTA',

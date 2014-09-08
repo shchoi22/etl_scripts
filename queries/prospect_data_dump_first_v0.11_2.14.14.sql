@@ -293,7 +293,7 @@ left outer join (select applicant_id -- last application that was processed
 		,min(applicants_applications.application_id) as first_application_id
 		from applicants_applications
 		left outer join (select max(approvals.application_id) as application_id from approvals group by application_id) as approvals on approvals.application_id = applicants_applications.application_id
-	        where approvals.application_id is not null
+	        --where approvals.application_id is not null
 		group by applicant_id) as last_application on last_application.applicant_id = applicants.id
 left outer join applications as application_details on last_application.application_id = application_details.id --application details
 left outer join (select application_id -- to identify applicant as primary or secondary

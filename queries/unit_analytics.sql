@@ -14,6 +14,11 @@
   ,cast(bedrooms as int) as bedrooms
   ,cast(bathrooms as int) as bathrooms
   ,leasename as lease_name
+  ,unitaddress as unit_address
+  ,unitaddresscont as unit_address_cont
+  ,unitcity as unit_city
+  ,unitstate as unit_state
+  ,unitzip as unit_zip
   ,case when unitamenities not like '%Not Available%'
        and unitabbreviation not like '%Neighborhood%'
        and status !='Occupied'

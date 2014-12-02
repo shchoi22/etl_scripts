@@ -13,6 +13,7 @@ with pw_lease as (select pw_lease.*
 		from pw_lease)
 select
    pw_lease.leasename as lease_name
+   ,cast(pw_lease.customerid as int) as customer_id
    ,pw_lease.building
    ,pw_lease.monthlyrent as monthly_rent
    ,pw_lease.rentdueday as rent_due_day

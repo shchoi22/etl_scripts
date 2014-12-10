@@ -184,7 +184,7 @@ SELECT
   ,prospect_data.underwriting_model_id
   ,prospect_data.student_app
   ,prospect_data.clv_score
-  ,prospect_data.fico_score
+  ,cast(prospect_data.fico_score as numeric)::int as fico_score
   ,prospect_data.ssn_itin
   ,prospect_data.months_at_residence
   ,prospect_data.years_at_job

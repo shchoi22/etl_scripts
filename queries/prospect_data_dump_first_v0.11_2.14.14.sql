@@ -203,6 +203,7 @@ select
  ,case when lp_reports.move_in_fee is null then approval_details.move_in_fee else lp_reports.move_in_fee end as move_in_fee
  ,case when lp_reports.deposit is null then approval_details.deposit else lp_reports.deposit end as deposit
  ,case when clv_reports.clv is null then applicants.clv else clv_reports.clv end as clv_score
+ ,ln_cr.score as fico_score
  ,ln_ev.ev_count_total
  ,ln_ev.ev_count_0_1
  ,ln_ev.ev_count_1_3
@@ -312,6 +313,27 @@ left outer join (select max(clv_sub.subscriber_id) as subscriber_id ,max(clv_sub
                   and clv_sub.subscriber_type = 'Applicant'
                   group by clv_sub.subscriber_id) as clv_sub on clv_sub.subscriber_id = applicants.id
 left outer join clv_reports on clv_reports.id = clv_sub.third_party_id
+
+--FICO Reports --------------------------------------------------------------------------------------------------------------------------------------------
+left outer join (select 
+    ln_reports.id
+    ,ln_reports.subscriber_id
+    ,ln_score.score
+  from 
+  (select 
+  max(lexis_nexis_reports.id) as id
+  ,subscriptions.subscriber_id as subscriber_id
+  from
+  public.lexis_nexis_reports
+  inner join subscriptions on subscriptions.third_party_id = lexis_nexis_reports.id 
+      and subscriptions.third_party_type = 'ThirdParty::LexisNexisReport'
+      and subscriptions.subscriber_type = 'Applicant'
+  where lexis_nexis_reports.status = 'complete'
+  and lexis_nexis_reports.report_type = 'CR'
+  group by subscriptions.subscriber_id
+  ) as ln_reports 
+  inner join public.lexis_nexis_reports as ln_score on ln_score.id = ln_reports.id 
+  ) as ln_cr on ln_cr.subscriber_id = applicants.id
 
 --EVC Reports---------------------------------------------------------------------------------------------------------------------------------------------
 left outer join (select *

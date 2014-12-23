@@ -2,6 +2,7 @@
 with
  pw_leases as
    (select pw_lease.leasename
+     ,pw_lease.customerid
      ,pw_lease.createdtime
      ,replace(pw_lease.primarycontactfirstname,'-',' ') as primarycontactfirstname
      ,replace(pw_lease.primarycontactlastname,'-',' ') as primarycontactlastname
@@ -143,7 +144,12 @@ SELECT
   ,secondary.first_name as secondary_first_name
   ,secondary.last_name as secondary_last_name
   ,secondary.applicant_id as secondary_applicant_id
-  ,case when pw_leases.leasename is null then pw_leases_sec.leasename else pw_leases.leasename end as lease_name
+  --,case when pw_leases.leasename is null then pw_leases_sec.leasename else pw_leases.leasename end as lease_name
+  ,case when pw_lease_cust.leasename is not null then pw_lease_cust.leasename
+    else case when pw_lease_cust_sec.leasename is not null then pw_lease_cust_sec.leasename
+      else case when pw_leases.leasename is not null then pw_leases.leasename
+        else case when pw_leases_sec.leasename is not null then pw_leases_sec.leasename
+          else null end end end end as lease_name
   ,case when prospect_data.first_showing_created ='' then null else cast(prospect_data.first_showing_created as timestamp) end as first_showing_created
   ,case when prospect_data.application_submitted_on = '' then null else cast(prospect_data.application_submitted_on as timestamp) end as application_submitted_on
   ,case when prospect_data.application_processed_on = '' then null else cast(prospect_data.application_processed_on as timestamp) end application_processed_on
@@ -267,6 +273,12 @@ FROM
 
   left outer join pw_building on prospect_data.desired_building_name = pw_building.buildingabbreviation
 
+  left outer join pw_leases as pw_lease_cust on pw_lease_cust.customerid = cast(prospect_data.id as numeric)
+                  and pw_lease_cust.customerid != 0
+
+  left outer join pw_leases as pw_lease_cust_sec on pw_lease_cust_sec.customerid = cast(secondary.id as numeric)
+                  and pw_lease_cust_sec.customerid != 0 
+
   left outer join pw_leases on --Primary
                   (((length(prospect_data.mobile_phone) >=10 and
                   pw_leases.combined_phone like '%'||prospect_data.mobile_phone||'%') or
@@ -277,6 +289,7 @@ FROM
                   prospect_data.first_name = lower(pw_leases.primarycontactfirstname) and
                   prospect_data.last_name = lower(pw_leases.primarycontactlastname))
                   and cast(pw_leases.createdtime as date) >= cast(prospect_data.created as date)
+                  and pw_leases.customerid = 0
 
   left outer join pw_leases as pw_leases_sec on --Secondary
                   (((length(secondary.mobile_phone) >=10 and
@@ -288,6 +301,7 @@ FROM
                   secondary.first_name = lower(pw_leases_sec.primarycontactfirstname) and
                   secondary.last_name = lower(pw_leases_sec.primarycontactlastname))
                   and cast(pw_leases_sec.createdtime as date) >= cast(secondary.created as date)
+                  and pw_leases_sec.customerid = 0
 
 
 where

@@ -202,6 +202,7 @@ SELECT
   ,prospect_data.employer_address
   ,prospect_data.employer_phone
   ,prospect_data.is_temp_employee
+  ,prospect_data.monthly_income
   ,prospect_data.monthly_income_payment_method
   ,prospect_data.monthly_income_proof
   ,prospect_data.second_income_payment_method

@@ -1,3 +1,5 @@
+import sys
+import traceback
 import psycopg2
 import ConfigInfo as cf
 
@@ -25,7 +27,7 @@ except:
 	exc_type, exc_value, exc_traceback = sys.exc_info()
 	lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
 	error_log = ''.join('!! ' + line for line in lines)
-	
+
 	#sending email of error log
 	sender = cf.gmail_id
 	receivers = [cf.recip]

@@ -324,7 +324,7 @@ left outer join (select
   max(lexis_nexis_reports.id) as id
   ,subscriptions.subscriber_id as subscriber_id
   from
-  public.lexis_nexis_reports
+  lexis_nexis_reports
   inner join subscriptions on subscriptions.third_party_id = lexis_nexis_reports.id 
       and subscriptions.third_party_type = 'ThirdParty::LexisNexisReport'
       and subscriptions.subscriber_type = 'Applicant'
@@ -332,7 +332,7 @@ left outer join (select
   and lexis_nexis_reports.report_type = 'CR'
   group by subscriptions.subscriber_id
   ) as ln_reports 
-  inner join public.lexis_nexis_reports as ln_score on ln_score.id = ln_reports.id 
+  inner join lexis_nexis_reports as ln_score on ln_score.id = ln_reports.id 
   ) as ln_cr on ln_cr.subscriber_id = applicants.id
 
 --EVC Reports---------------------------------------------------------------------------------------------------------------------------------------------
@@ -343,7 +343,7 @@ left outer join (select *
 		,max(lexis_nexis_reports.created_at) as created_at
 		,max(lexis_nexis_reports.updated_at) as updated_at
 
-		from public.lexis_nexis_reports
+		from lexis_nexis_reports
 		left outer join subscriptions on subscriptions.third_party_id = lexis_nexis_reports.id
 			and subscriptions.third_party_type = 'ThirdParty::LexisNexisReport'
 			and subscriptions.subscriber_type = 'Applicant'
@@ -376,7 +376,7 @@ left outer join (select *
 		,max(lexis_nexis_reports.created_at) as created_at
 		,max(lexis_nexis_reports.updated_at) as updated_at
 
-		from public.lexis_nexis_reports
+		from lexis_nexis_reports
 		left outer join subscriptions on subscriptions.third_party_id = lexis_nexis_reports.id
 			and subscriptions.third_party_type = 'ThirdParty::LexisNexisReport'
 			and subscriptions.subscriber_type = 'Applicant'
@@ -428,7 +428,7 @@ left outer join (select max(approvals.id) as approval_id -- last approval
                  --and approvals.process_state = 'underwritten'
                  group by application_id) as last_approval on last_application.application_id = last_approval.application_id
 left outer join approvals as approval_details on approval_details.id = last_approval.approval_id -- approval details
-left outer join public.legacy_process_approval_reports as lp_reports on lp_reports.approval_id = last_approval.approval_id
+left outer join legacy_process_approval_reports as lp_reports on lp_reports.approval_id = last_approval.approval_id
 
 left outer join (select min(approvals.id) as approval_id -- first approval of first application
                  ,application_id

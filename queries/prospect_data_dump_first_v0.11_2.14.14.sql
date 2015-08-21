@@ -1,4 +1,5 @@
-﻿--explain
+﻿set search_path = pangea_api;
+--explain
 with customers_clean as
 (select
    trim(lower(replace(replace(replace(customers.first_name,'-',' '),';',''),'/t',''))) as first_name_clean

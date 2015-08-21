@@ -1,4 +1,5 @@
-﻿--explain
+﻿set search_path = pangea_api;
+--explain
 with customers as
 (select
    trim(lower(replace(replace(customers.first_name,';',''),'/t',''))) as first_name_clean
@@ -31,7 +32,7 @@ select
   --,string_agg(distinct last_application.applicant_type,'') as applicant_type
 
 from
-  public.showings
+  showings
   left outer join prospects on showings.prospect_id = prospects.id
   left outer join customers on customers.id = prospects.customer_id
   left outer join applicants on applicants.customer_id = customers.id
